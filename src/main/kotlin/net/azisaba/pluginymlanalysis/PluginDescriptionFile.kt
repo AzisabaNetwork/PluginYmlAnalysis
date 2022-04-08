@@ -50,6 +50,8 @@ data class PluginDescriptionFile(
             } catch (e: Exception) {
                 println("Failed to load $path:")
                 e.printStackTrace()
+                println("Raw contents for $path:")
+                println(fileContents)
                 null
             }
         }.filterNotNull()
