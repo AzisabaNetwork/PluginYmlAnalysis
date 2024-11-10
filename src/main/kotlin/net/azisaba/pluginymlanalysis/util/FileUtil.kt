@@ -12,7 +12,7 @@ object FileUtil {
         if (Files.isDirectory(path)) {
             Files.list(path).forEach {
                 if (Files.isDirectory(it)) {
-                    list.addAll(collectJarFiles(it))
+//                    list.addAll(collectJarFiles(it))
                 } else {
                     if (it.toString().endsWith(".jar")) {
                         list.add(it)
