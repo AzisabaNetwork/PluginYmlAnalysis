@@ -1,6 +1,7 @@
 package net.azisaba.pluginymlanalysis
 
 import net.azisaba.pluginymlanalysis.util.FileUtil
+import net.azisaba.pluginymlanalysis.util.PluginDescriptionUtil
 import net.azisaba.pluginymlanalysis.yaml.YamlConfiguration
 import net.azisaba.pluginymlanalysis.yaml.YamlObject
 import java.nio.file.Path
@@ -55,5 +56,59 @@ data class PluginDescriptionFile(
                 null
             }
         }.filterNotNull()
+    }
+
+    override fun toString(): String {
+        var sb = mutableListOf<String>()
+        sb += "Plugin '$name':"
+        "  Version: $version"
+        "  Main class: $main"
+        if (description != null) sb += "  Description: ${description.trim()}"
+        if (authors != null) sb += "  Authors: ${authors.joinToString(", ")}"
+        if (website != null) sb += "  Website: $website"
+        if (prefix != null) sb += "  Prefix: $prefix"
+        if (database != null) sb += "  Database: $database"
+        if (load != null) sb += "  Load: $load"
+        if (depend != null) {
+            sb += "  Dependencies:"
+            depend.forEach { s ->
+                sb += "    - $s"
+            }
+        }
+        if (softdepend != null) {
+            sb += "  Soft dependencies:"
+            softdepend.forEach { s ->
+                sb += "    - $s"
+            }
+        }
+        if (loadbefore != null) sb += "  Load before: $loadbefore"
+        if (apiVersion != null) sb += "  API version: $apiVersion"
+        if (libraries != null) {
+            sb += "  Libraries:"
+            libraries.forEach { s ->
+                sb += "    - $s"
+            }
+        }
+        if (defaultPermission != null) sb += "  Default permission: $defaultPermission"
+        return sb.joinToString("\n")
+    }
+
+    fun toString(descriptions: List<PluginDescriptionFile>): String {
+        var sb = toString() + "\n"
+        val hardDependents = PluginDescriptionUtil.findDependents(descriptions, this, true)
+        if (hardDependents.isNotEmpty()) {
+            sb += "  Dependents (hard):\n"
+            hardDependents.forEach { d ->
+                sb += "    - ${d.name}\n"
+            }
+        }
+        val softDependents = PluginDescriptionUtil.findDependents(descriptions, this, false)
+        if (softDependents.isNotEmpty()) {
+            sb += "  Dependents (soft):\n"
+            softDependents.forEach { d ->
+                sb += "    - ${d.name}\n"
+            }
+        }
+        return sb.trim('\n')
     }
 }

@@ -1,0 +1,7 @@
+name: PluginYmlAnalysis
+main: net.azisaba.pluginymlanalysis.PluginMain
+version: 1.0
+api-version: 1.13
+commands:
+  pluginymlanalysis:
+    permission: pluginymlanalysis.command
